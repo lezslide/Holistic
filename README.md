@@ -14,19 +14,28 @@ Este proyecto se publica como sitio estatico.
 
 Cada push a `main` dispara un nuevo deploy en Vercel.
 
-## Datos actuales
+## Supabase
 
-La version actual guarda cuentas y reservas en `localStorage`, solamente para probar el flujo en el navegador.
+La web ya esta conectada a este proyecto:
 
-Para que las reservas queden guardadas para todos los usuarios y el admin vea datos reales desde cualquier dispositivo, el siguiente paso es conectar Supabase.
+- URL: `https://juvojjajjmtrifzxdeub.supabase.co`
+- Key publica: configurada en `index.html`
 
-## Supabase pendiente
+Antes de probar reservas reales, abrir Supabase y ejecutar el contenido de `supabase-schema.sql` en SQL Editor.
 
-Datos necesarios:
+Pasos:
 
-- URL del proyecto Supabase.
-- Anon key publica.
-- Login con email y contrasena habilitado.
-- Tablas: `profiles`, `classes`, `bookings`.
-- Rol admin para la cuenta de Denise.
-- Numero real de WhatsApp de la empresa.
+1. Ir a Supabase > SQL Editor.
+2. Crear un query nuevo.
+3. Pegar todo el contenido de `supabase-schema.sql`.
+4. Ejecutar.
+5. Crear una cuenta desde la web con el email real de Denise.
+6. Volver a SQL Editor y ejecutar:
+
+```sql
+update public.profiles
+set role = 'admin'
+where email = 'EMAIL_DE_DENISE';
+```
+
+Si Auth pide confirmar email, desactivar temporalmente "Confirm email" en Authentication > Providers > Email, o confirmar el correo antes de iniciar sesion.

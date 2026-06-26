@@ -397,7 +397,7 @@
                     <span class="text-sm font-semibold">Contraseña</span>
                     <input id="authPassword" type="password" required class="mt-2 w-full border border-gray-200 rounded-2xl px-4 py-3 outline-none focus:border-black" placeholder="Mínimo 4 caracteres">
                 </label>
-                <p id="authHint" class="text-sm text-gray-500">Para probar admin: admin@denise.com / admin</p>
+                <p id="authHint" class="text-sm text-gray-500">La cuenta se guarda en Supabase. Para admin, primero creá el usuario y luego marcá su perfil como admin.</p>
                 <p id="authError" class="text-sm text-red-600"></p>
                 <button id="authSubmitButton" type="submit" class="w-full bg-black text-white px-5 py-3 rounded-full font-semibold">Entrar</button>
                 <button id="switchAuthModeButton" type="button" class="w-full border border-black px-5 py-3 rounded-full font-semibold">Crear cuenta nueva</button>
@@ -419,7 +419,7 @@
         </svg>
     </a>
 
-    <script>
+    <script type="text/plain" data-disabled="local-storage-demo">
         const classes = {
             "yoga-vinyasa": {
                 name: "Yoga Vinyasa",
@@ -649,6 +649,282 @@
             if (studentCancel) cancelBooking(studentCancel.dataset.classId);
             if (adminCancel) cancelBooking(adminCancel.dataset.classId, adminCancel.dataset.email);
         });
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+    <script>
+        const SUPABASE_URL = "https://juvojjajjmtrifzxdeub.supabase.co";
+        const SUPABASE_PUBLISHABLE_KEY = "sb_publishable_z6BebHdjeArfdeke1cXIKw_ymiMvG6m";
+        const db = window.supabase.createClient(SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY);
+
+        const classes = {
+            "yoga-vinyasa": {
+                name: "Yoga Vinyasa",
+                schedule: "Lunes 09:00 / Viernes 08:30",
+                capacity: 8
+            },
+            "pilates-reformer": {
+                name: "Pilates Reformer",
+                schedule: "Lunes 18:30 / Miércoles 10:00 / Viernes 18:30",
+                capacity: 5
+            },
+            mindfulness: {
+                name: "Mindfulness",
+                schedule: "Miércoles 19:00",
+                capacity: 10
+            }
+        };
+
+        const authModal = document.getElementById("authModal");
+        const authForm = document.getElementById("authForm");
+        const authTitle = document.getElementById("authTitle");
+        const authName = document.getElementById("authName");
+        const authEmail = document.getElementById("authEmail");
+        const authPassword = document.getElementById("authPassword");
+        const authError = document.getElementById("authError");
+        const authSubmitButton = document.getElementById("authSubmitButton");
+        const switchAuthModeButton = document.getElementById("switchAuthModeButton");
+        const studentPanel = document.getElementById("studentPanel");
+        const adminPanel = document.getElementById("adminPanel");
+        let authMode = "login";
+        let pendingClassId = null;
+
+        function setMessage(message, isError = false) {
+            authError.textContent = message || "";
+            authError.className = isError ? "text-sm text-red-600" : "text-sm text-gray-500";
+        }
+
+        function setAuthMode(mode) {
+            authMode = mode;
+            const isRegister = mode === "register";
+            authTitle.textContent = isRegister ? "Crear cuenta" : "Entrar a Denise";
+            authSubmitButton.textContent = isRegister ? "Crear cuenta" : "Entrar";
+            switchAuthModeButton.textContent = isRegister ? "Ya tengo cuenta" : "Crear cuenta nueva";
+            authName.parentElement.style.display = isRegister ? "block" : "none";
+            setMessage("");
+        }
+
+        function openAuth(mode = "login", classId = null) {
+            pendingClassId = classId;
+            setAuthMode(mode);
+            authModal.classList.add("is-open");
+            authEmail.focus();
+        }
+
+        function closeAuth() {
+            authModal.classList.remove("is-open");
+            authForm.reset();
+            setMessage("");
+        }
+
+        async function getSessionUser() {
+            const { data: sessionData } = await db.auth.getSession();
+            const user = sessionData.session?.user;
+            if (!user) return null;
+
+            const { data: profile } = await db
+                .from("profiles")
+                .select("id, name, email, role")
+                .eq("id", user.id)
+                .maybeSingle();
+
+            return {
+                id: user.id,
+                email: user.email,
+                name: profile?.name || user.user_metadata?.name || user.email,
+                role: profile?.role || "student"
+            };
+        }
+
+        async function reserveClass(classId) {
+            const user = await getSessionUser();
+            if (!user) {
+                openAuth("register", classId);
+                return;
+            }
+
+            const { error } = await db
+                .from("bookings")
+                .insert({ user_id: user.id, class_id: classId });
+
+            if (error && error.code !== "23505") {
+                alert("No se pudo reservar todavía. Revisá que las tablas de Supabase estén creadas.");
+                console.error(error);
+                return;
+            }
+
+            await renderPanels();
+            document.getElementById("paneles").scrollIntoView({ behavior: "smooth" });
+        }
+
+        async function cancelBooking(bookingId) {
+            const { error } = await db.from("bookings").delete().eq("id", bookingId);
+            if (error) {
+                alert("No se pudo cancelar la reserva.");
+                console.error(error);
+                return;
+            }
+            await renderPanels();
+        }
+
+        function bookingCard(booking) {
+            const classData = classes[booking.class_id] || { name: booking.class_id, schedule: "Horario a confirmar" };
+            return `
+                <article class="border border-gray-100 rounded-2xl p-5">
+                    <p class="text-xl font-semibold">${classData.name}</p>
+                    <p class="text-gray-500 mt-2">${classData.schedule}</p>
+                    <button class="student-cancel mt-5 w-full border border-black px-4 py-3 rounded-full font-semibold" data-booking-id="${booking.id}">Bajarme de la clase</button>
+                </article>
+            `;
+        }
+
+        function adminBookingRow(booking) {
+            const classData = classes[booking.class_id] || { name: booking.class_id, schedule: "Horario a confirmar" };
+            const profile = booking.profiles || {};
+            return `
+                <div class="grid md:grid-cols-[1fr_1fr_auto] gap-3 items-center border border-white/10 rounded-2xl p-4">
+                    <div>
+                        <p class="font-semibold">${profile.name || profile.email || "Alumno"}</p>
+                        <p class="text-white/60 text-sm">${profile.email || ""}</p>
+                    </div>
+                    <div>
+                        <p>${classData.name}</p>
+                        <p class="text-white/60 text-sm">${classData.schedule}</p>
+                    </div>
+                    <button class="admin-cancel border border-white px-4 py-2 rounded-full text-sm font-semibold" data-booking-id="${booking.id}">Bajar de clase</button>
+                </div>
+            `;
+        }
+
+        async function renderPanels() {
+            const user = await getSessionUser();
+            studentPanel.classList.add("panel-hidden");
+            adminPanel.classList.add("panel-hidden");
+
+            if (!user) return;
+
+            if (user.role === "admin") {
+                adminPanel.classList.remove("panel-hidden");
+                const [{ count: userCount }, { data: bookings, count: bookingCount, error }] = await Promise.all([
+                    db.from("profiles").select("id", { count: "exact", head: true }).eq("role", "student"),
+                    db.from("bookings").select("id, class_id, created_at, profiles(name, email)", { count: "exact" }).order("created_at", { ascending: false })
+                ]);
+
+                document.getElementById("adminUserCount").textContent = userCount || 0;
+                document.getElementById("adminBookingCount").textContent = bookingCount || 0;
+                document.getElementById("adminBookings").innerHTML = error
+                    ? `<p class="text-white/60">Creá las tablas y políticas de Supabase para ver reservas.</p>`
+                    : bookings.length
+                        ? bookings.map(adminBookingRow).join("")
+                        : `<p class="text-white/60">Todavía no hay reservas.</p>`;
+                return;
+            }
+
+            studentPanel.classList.remove("panel-hidden");
+            document.getElementById("studentGreeting").textContent = `Hola ${user.name}, desde acá podés ver tus clases y bajarte si no podés asistir.`;
+
+            const { data: bookings, error } = await db
+                .from("bookings")
+                .select("id, class_id, created_at")
+                .eq("user_id", user.id)
+                .order("created_at", { ascending: false });
+
+            document.getElementById("studentBookings").innerHTML = error
+                ? `<div class="md:col-span-3 bg-gray-50 rounded-2xl p-6 text-gray-500">Creá las tablas de Supabase para activar reservas reales.</div>`
+                : bookings.length
+                    ? bookings.map(bookingCard).join("")
+                    : `<div class="md:col-span-3 bg-gray-50 rounded-2xl p-6 text-gray-500">Todavía no reservaste clases. Elegí una clase arriba y tocá reservar.</div>`;
+        }
+
+        document.getElementById("loginButton").addEventListener("click", () => openAuth("login"));
+        document.getElementById("registerButton").addEventListener("click", () => openAuth("register"));
+        document.getElementById("closeAuthButton").addEventListener("click", closeAuth);
+        document.getElementById("logoutStudentButton").addEventListener("click", async () => {
+            await db.auth.signOut();
+            await renderPanels();
+        });
+        document.getElementById("logoutAdminButton").addEventListener("click", async () => {
+            await db.auth.signOut();
+            await renderPanels();
+        });
+        switchAuthModeButton.addEventListener("click", () => setAuthMode(authMode === "login" ? "register" : "login"));
+
+        document.querySelectorAll(".reserve-button").forEach((button) => {
+            button.addEventListener("click", async (event) => {
+                event.preventDefault();
+                await reserveClass(button.dataset.classId);
+            });
+        });
+
+        authForm.addEventListener("submit", async (event) => {
+            event.preventDefault();
+            setMessage("");
+            const email = authEmail.value.trim().toLowerCase();
+            const password = authPassword.value.trim();
+
+            if (password.length < 6) {
+                setMessage("La contraseña debe tener al menos 6 caracteres.", true);
+                return;
+            }
+
+            authSubmitButton.disabled = true;
+            authSubmitButton.textContent = "Procesando...";
+
+            if (authMode === "register") {
+                const name = authName.value.trim();
+                if (!name) {
+                    setMessage("Ingresá tu nombre.", true);
+                    authSubmitButton.disabled = false;
+                    authSubmitButton.textContent = "Crear cuenta";
+                    return;
+                }
+
+                const { data, error } = await db.auth.signUp({
+                    email,
+                    password,
+                    options: { data: { name } }
+                });
+
+                if (error) {
+                    setMessage(error.message, true);
+                    authSubmitButton.disabled = false;
+                    authSubmitButton.textContent = "Crear cuenta";
+                    return;
+                }
+
+                if (!data.session) {
+                    setMessage("Cuenta creada. Revisá tu email para confirmar y después entrá.", false);
+                    authSubmitButton.disabled = false;
+                    authSubmitButton.textContent = "Crear cuenta";
+                    return;
+                }
+            } else {
+                const { error } = await db.auth.signInWithPassword({ email, password });
+                if (error) {
+                    setMessage("Email o contraseña incorrectos.", true);
+                    authSubmitButton.disabled = false;
+                    authSubmitButton.textContent = "Entrar";
+                    return;
+                }
+            }
+
+            const classToReserve = pendingClassId;
+            pendingClassId = null;
+            closeAuth();
+            if (classToReserve) await reserveClass(classToReserve);
+            await renderPanels();
+            document.getElementById("paneles").scrollIntoView({ behavior: "smooth" });
+            authSubmitButton.disabled = false;
+            authSubmitButton.textContent = authMode === "register" ? "Crear cuenta" : "Entrar";
+        });
+
+        document.addEventListener("click", async (event) => {
+            const cancelButton = event.target.closest(".student-cancel, .admin-cancel");
+            if (cancelButton) await cancelBooking(cancelButton.dataset.bookingId);
+        });
+
+        db.auth.onAuthStateChange(() => renderPanels());
+        setAuthMode("login");
+        renderPanels();
     </script>
 </body>
 </html>
