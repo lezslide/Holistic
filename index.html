@@ -1,0 +1,654 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Denise | Yoga & Pilates Studio</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Raleway:wght@300;400;600;700&display=swap');
+        html { scroll-behavior: smooth; }
+        body { font-family: 'Raleway', sans-serif; background-color: #fcfcfc; color: #151515; }
+        .bg-custom-purple { background-color: #d1b3e8; }
+        .text-custom-purple { color: #8e66ad; }
+        .bg-custom-green { background-color: #d4f877; }
+        .bg-whatsapp-aqua { background-color: #19d6a3; }
+        .hover-lift { transition: transform 0.3s ease, box-shadow 0.3s ease; }
+        .hover-lift:hover { transform: translateY(-5px); box-shadow: 0 18px 40px rgba(21, 21, 21, 0.08); }
+        .whatsapp-button {
+            position: fixed;
+            right: 22px;
+            bottom: 22px;
+            z-index: 50;
+            width: 64px;
+            height: 64px;
+            border-radius: 999px;
+            display: grid;
+            place-items: center;
+            color: white;
+            box-shadow: 0 16px 35px rgba(25, 214, 163, 0.38);
+            transition: transform 0.25s ease, box-shadow 0.25s ease;
+        }
+        .whatsapp-button:hover {
+            transform: translateY(-3px) scale(1.03);
+            box-shadow: 0 22px 46px rgba(25, 214, 163, 0.48);
+        }
+        .modal-backdrop {
+            position: fixed;
+            inset: 0;
+            z-index: 60;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            background: rgba(21, 21, 21, 0.55);
+            padding: 20px;
+        }
+        .modal-backdrop.is-open { display: flex; }
+        .panel-hidden { display: none; }
+    </style>
+</head>
+<body>
+    <nav class="flex justify-between items-center px-6 md:px-8 py-6 gap-5">
+        <a href="#" class="text-2xl font-bold tracking-tighter">Denise</a>
+        <div class="hidden md:flex gap-8 text-sm font-medium">
+            <a href="#sobre-nosotros" class="hover:text-custom-purple">Sobre Nosotros</a>
+            <a href="#clases" class="hover:text-custom-purple">Clases</a>
+            <a href="#instructores" class="hover:text-custom-purple">Instructores</a>
+            <a href="#eventos" class="hover:text-custom-purple">Eventos</a>
+        </div>
+        <div class="flex gap-3">
+            <button id="loginButton" class="hidden sm:inline-flex px-6 py-2 border border-black rounded-full text-sm">Entrar</button>
+            <button id="registerButton" class="px-6 py-2 bg-black text-white rounded-full text-sm">
+                Registrarse
+            </button>
+        </div>
+    </nav>
+
+    <header class="mx-5 md:mx-8 p-8 md:p-16 rounded-3xl bg-custom-purple flex flex-col md:flex-row items-center gap-12">
+        <div class="flex-1 space-y-6">
+            <p class="uppercase tracking-[0.24em] text-white/80 text-xs font-bold">Yoga, pilates y bienestar</p>
+            <h1 class="text-5xl md:text-7xl font-light tracking-tight text-white leading-tight">Respira.<br>Equilibra. Sé.</h1>
+            <p class="text-white text-lg opacity-90 max-w-md">Únete a nuestro camino hacia una vida consciente. Encuentra tu flujo perfecto con Yoga y Pilates.</p>
+            <a href="#clases" class="inline-flex bg-custom-green px-8 py-4 rounded-full font-semibold hover:bg-lime-300">Empezar el viaje</a>
+        </div>
+        <div class="w-full md:w-1/3 h-64 md:h-96 rounded-3xl overflow-hidden bg-gray-200">
+            <img
+                src="https://images.unsplash.com/photo-1599901860904-17e6ed7083a0?auto=format&fit=crop&w=900&q=80"
+                alt="Persona practicando yoga en un estudio luminoso"
+                class="w-full h-full object-cover"
+            >
+        </div>
+    </header>
+
+    <section id="sobre-nosotros" class="max-w-7xl mx-auto px-6 md:px-8 py-16 grid md:grid-cols-[0.9fr_1.1fr] gap-10 items-center">
+        <div>
+            <p class="text-custom-purple text-sm font-bold uppercase tracking-[0.2em] mb-4">Sobre Nosotros</p>
+            <h2 class="text-3xl md:text-5xl font-light leading-tight">Un estudio cercano para moverte, respirar y volver a vos.</h2>
+        </div>
+        <div class="grid sm:grid-cols-3 gap-4">
+            <div class="bg-white border border-gray-100 rounded-2xl p-6">
+                <p class="text-3xl font-semibold">12+</p>
+                <p class="text-gray-500 mt-2">clases semanales</p>
+            </div>
+            <div class="bg-white border border-gray-100 rounded-2xl p-6">
+                <p class="text-3xl font-semibold">4</p>
+                <p class="text-gray-500 mt-2">disciplinas guiadas</p>
+            </div>
+            <div class="bg-white border border-gray-100 rounded-2xl p-6">
+                <p class="text-3xl font-semibold">1:1</p>
+                <p class="text-gray-500 mt-2">acompañamiento inicial</p>
+            </div>
+        </div>
+    </section>
+
+    <section id="clases" class="max-w-7xl mx-auto px-6 md:px-8 py-16">
+        <div class="flex flex-col md:flex-row md:items-end md:justify-between gap-4 mb-10">
+            <div>
+                <p class="text-custom-purple text-sm font-bold uppercase tracking-[0.2em] mb-4">Clases</p>
+                <h2 class="text-3xl font-medium">Clases para empezar, sostener y avanzar</h2>
+                <p class="text-gray-500 mt-3 max-w-2xl">Elegí una práctica según tu energía del día. Todas las clases tienen cupos reducidos, adaptación por nivel y acompañamiento cercano.</p>
+            </div>
+            <a href="https://wa.me/5491123456789?text=Hola%20Denise%2C%20quiero%20consultar%20horarios%20y%20precios%20de%20las%20clases."
+               target="_blank"
+               rel="noopener"
+               class="bg-whatsapp-aqua text-white px-6 py-3 rounded-full font-semibold w-fit">
+                Consultar por WhatsApp
+            </a>
+        </div>
+
+        <div class="grid md:grid-cols-3 gap-8">
+            <article class="bg-white p-7 rounded-3xl shadow-sm border border-gray-100 hover-lift">
+                <div class="h-40 bg-gray-100 rounded-2xl mb-6 overflow-hidden">
+                    <img src="https://images.unsplash.com/photo-1552196563-55cd4e45efb3?auto=format&fit=crop&w=700&q=80" alt="Clase de yoga vinyasa" class="w-full h-full object-cover">
+                </div>
+                <div class="flex items-center justify-between gap-3">
+                    <h3 class="text-xl font-semibold">Yoga Vinyasa</h3>
+                    <span class="bg-[#f5f2f7] text-custom-purple px-3 py-1 rounded-full text-xs font-bold">Todos los niveles</span>
+                </div>
+                <p class="text-gray-500 mt-3">Secuencias fluidas para conectar movimiento, respiración y presencia.</p>
+                <div class="grid grid-cols-3 gap-2 mt-6 text-sm">
+                    <div class="bg-gray-50 rounded-2xl p-3">
+                        <p class="font-semibold">60 min</p>
+                        <p class="text-gray-500">duración</p>
+                    </div>
+                    <div class="bg-gray-50 rounded-2xl p-3">
+                        <p class="font-semibold">8 cupos</p>
+                        <p class="text-gray-500">máximo</p>
+                    </div>
+                    <div class="bg-gray-50 rounded-2xl p-3">
+                        <p class="font-semibold">Suave</p>
+                        <p class="text-gray-500">ritmo</p>
+                    </div>
+                </div>
+                <a href="https://wa.me/5491123456789?text=Hola%20Denise%2C%20quiero%20reservar%20una%20clase%20de%20Yoga%20Vinyasa."
+                   class="reserve-button mt-6 inline-flex w-full justify-center border border-black px-5 py-3 rounded-full font-semibold"
+                   data-class-id="yoga-vinyasa">
+                    Reservar Yoga
+                </a>
+            </article>
+
+            <article class="bg-custom-green p-7 rounded-3xl shadow-sm hover-lift">
+                <div class="flex items-center justify-between gap-3">
+                    <h3 class="text-xl font-semibold">Pilates Reformer</h3>
+                    <span class="bg-white/70 px-3 py-1 rounded-full text-xs font-bold">Más pedido</span>
+                </div>
+                <p class="mt-3">Fortalecé tu core, mejorá postura y estabilidad con correcciones personalizadas.</p>
+                <div class="grid grid-cols-3 gap-2 mt-6 text-sm">
+                    <div class="bg-white/55 rounded-2xl p-3">
+                        <p class="font-semibold">50 min</p>
+                        <p>duración</p>
+                    </div>
+                    <div class="bg-white/55 rounded-2xl p-3">
+                        <p class="font-semibold">5 cupos</p>
+                        <p>máximo</p>
+                    </div>
+                    <div class="bg-white/55 rounded-2xl p-3">
+                        <p class="font-semibold">Medio</p>
+                        <p>ritmo</p>
+                    </div>
+                </div>
+                <a href="https://wa.me/5491123456789?text=Hola%20Denise%2C%20quiero%20reservar%20una%20clase%20de%20Pilates%20Reformer."
+                   class="reserve-button mt-6 inline-flex w-full justify-center bg-black text-white px-5 py-3 rounded-full font-semibold"
+                   data-class-id="pilates-reformer">
+                    Reservar Pilates
+                </a>
+            </article>
+
+            <article class="bg-white p-7 rounded-3xl shadow-sm border border-gray-100 hover-lift">
+                <div class="h-40 bg-gray-100 rounded-2xl mb-6 overflow-hidden">
+                    <img src="https://images.unsplash.com/photo-1506126613408-eca07ce68773?auto=format&fit=crop&w=700&q=80" alt="Meditación guiada" class="w-full h-full object-cover">
+                </div>
+                <div class="flex items-center justify-between gap-3">
+                    <h3 class="text-xl font-semibold">Mindfulness</h3>
+                    <span class="bg-[#f5f2f7] text-custom-purple px-3 py-1 rounded-full text-xs font-bold">Antiestrés</span>
+                </div>
+                <p class="text-gray-500 mt-3">Pausa, presencia y claridad mental con respiración y relajación guiada.</p>
+                <div class="grid grid-cols-3 gap-2 mt-6 text-sm">
+                    <div class="bg-gray-50 rounded-2xl p-3">
+                        <p class="font-semibold">45 min</p>
+                        <p class="text-gray-500">duración</p>
+                    </div>
+                    <div class="bg-gray-50 rounded-2xl p-3">
+                        <p class="font-semibold">10 cupos</p>
+                        <p class="text-gray-500">máximo</p>
+                    </div>
+                    <div class="bg-gray-50 rounded-2xl p-3">
+                        <p class="font-semibold">Calmo</p>
+                        <p class="text-gray-500">ritmo</p>
+                    </div>
+                </div>
+                <a href="https://wa.me/5491123456789?text=Hola%20Denise%2C%20quiero%20reservar%20una%20clase%20de%20Mindfulness."
+                   class="reserve-button mt-6 inline-flex w-full justify-center border border-black px-5 py-3 rounded-full font-semibold"
+                   data-class-id="mindfulness">
+                    Reservar Mindfulness
+                </a>
+            </article>
+        </div>
+
+        <div class="grid lg:grid-cols-[1.25fr_0.75fr] gap-8 mt-8">
+            <div class="bg-white border border-gray-100 rounded-3xl p-6 md:p-8">
+                <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-6">
+                    <h3 class="text-2xl font-semibold">Horarios sugeridos</h3>
+                    <span class="text-gray-500 text-sm">Confirmación final por WhatsApp</span>
+                </div>
+                <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-3">
+                    <div class="border border-gray-100 rounded-2xl p-4">
+                        <p class="font-semibold">Lunes</p>
+                        <p class="text-gray-500 mt-1">09:00 Yoga Vinyasa</p>
+                        <p class="text-gray-500">18:30 Pilates</p>
+                    </div>
+                    <div class="border border-gray-100 rounded-2xl p-4">
+                        <p class="font-semibold">Miércoles</p>
+                        <p class="text-gray-500 mt-1">10:00 Pilates</p>
+                        <p class="text-gray-500">19:00 Mindfulness</p>
+                    </div>
+                    <div class="border border-gray-100 rounded-2xl p-4">
+                        <p class="font-semibold">Viernes</p>
+                        <p class="text-gray-500 mt-1">08:30 Yoga Vinyasa</p>
+                        <p class="text-gray-500">18:30 Pilates</p>
+                    </div>
+                    <div class="border border-gray-100 rounded-2xl p-4">
+                        <p class="font-semibold">Sábado</p>
+                        <p class="text-gray-500 mt-1">10:00 Yoga suave</p>
+                        <p class="text-gray-500">11:30 Stretching</p>
+                    </div>
+                    <div class="border border-gray-100 rounded-2xl p-4 sm:col-span-2">
+                        <p class="font-semibold">Clases privadas</p>
+                        <p class="text-gray-500 mt-1">Turnos personalizados para objetivos puntuales, recuperación de movilidad o primera experiencia.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-[#151515] text-white rounded-3xl p-6 md:p-8">
+                <p class="text-white/60 text-sm uppercase tracking-[0.2em] font-bold">Planes</p>
+                <h3 class="text-2xl font-semibold mt-3">Elegí cómo empezar</h3>
+                <div class="space-y-4 mt-6">
+                    <div class="border border-white/10 rounded-2xl p-4">
+                        <p class="font-semibold">Clase suelta</p>
+                        <p class="text-white/60 text-sm mt-1">Ideal para probar el estudio.</p>
+                    </div>
+                    <div class="border border-white/10 rounded-2xl p-4">
+                        <p class="font-semibold">Pack 4 clases</p>
+                        <p class="text-white/60 text-sm mt-1">Una práctica por semana.</p>
+                    </div>
+                    <div class="border border-white/10 rounded-2xl p-4">
+                        <p class="font-semibold">Pack 8 clases</p>
+                        <p class="text-white/60 text-sm mt-1">Para sostener rutina y progreso.</p>
+                    </div>
+                </div>
+                <a href="https://wa.me/5491123456789?text=Hola%20Denise%2C%20quiero%20consultar%20los%20planes%20de%20clases."
+                   target="_blank"
+                   rel="noopener"
+                   class="mt-6 inline-flex w-full justify-center bg-whatsapp-aqua text-white px-5 py-3 rounded-full font-semibold">
+                    Pedir precios
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <section id="instructores" class="bg-[#f5f2f7] py-16">
+        <div class="max-w-7xl mx-auto px-6 md:px-8">
+            <p class="text-custom-purple text-sm font-bold uppercase tracking-[0.2em] mb-4">Instructores</p>
+            <h2 class="text-3xl font-medium mb-10">Acompañamiento humano y profesional</h2>
+            <div class="grid md:grid-cols-3 gap-8">
+                <article class="bg-white rounded-3xl p-6 border border-gray-100 hover-lift">
+                    <div class="h-56 rounded-2xl overflow-hidden mb-5">
+                        <img src="https://images.unsplash.com/photo-1549576490-b0b4831ef60a?auto=format&fit=crop&w=700&q=80" alt="Instructora Denise" class="w-full h-full object-cover">
+                    </div>
+                    <h3 class="text-xl font-semibold">Denise</h3>
+                    <p class="text-gray-500 mt-2">Yoga integral, respiración consciente y prácticas para principiantes.</p>
+                </article>
+                <article class="bg-white rounded-3xl p-6 border border-gray-100 hover-lift">
+                    <div class="h-56 rounded-2xl overflow-hidden mb-5">
+                        <img src="https://images.unsplash.com/photo-1518611012118-696072aa579a?auto=format&fit=crop&w=700&q=80" alt="Instructor de pilates" class="w-full h-full object-cover">
+                    </div>
+                    <h3 class="text-xl font-semibold">Marina</h3>
+                    <p class="text-gray-500 mt-2">Pilates Reformer, movilidad y entrenamiento postural.</p>
+                </article>
+                <article class="bg-white rounded-3xl p-6 border border-gray-100 hover-lift">
+                    <div class="h-56 rounded-2xl overflow-hidden mb-5">
+                        <img src="https://images.unsplash.com/photo-1524863479829-916d8e77f114?auto=format&fit=crop&w=700&q=80" alt="Instructor de meditación" class="w-full h-full object-cover">
+                    </div>
+                    <h3 class="text-xl font-semibold">Lucía</h3>
+                    <p class="text-gray-500 mt-2">Meditación, relajación guiada y herramientas de bienestar cotidiano.</p>
+                </article>
+            </div>
+        </div>
+    </section>
+
+    <section id="eventos" class="max-w-7xl mx-auto px-6 md:px-8 py-16">
+        <p class="text-custom-purple text-sm font-bold uppercase tracking-[0.2em] mb-4">Eventos</p>
+        <div class="flex flex-col md:flex-row md:items-end md:justify-between gap-4 mb-10">
+            <h2 class="text-3xl font-medium">Próximas experiencias</h2>
+            <a href="https://wa.me/5491123456789?text=Hola%20Denise%2C%20quiero%20inscribirme%20a%20un%20evento."
+               target="_blank"
+               rel="noopener"
+               class="border border-black px-6 py-3 rounded-full font-semibold w-fit">
+                Inscribirme
+            </a>
+        </div>
+        <div class="space-y-4">
+            <article class="grid md:grid-cols-[160px_1fr_auto] gap-4 items-center bg-white border border-gray-100 rounded-3xl p-6">
+                <p class="text-custom-purple font-bold">Sáb 04 Jul</p>
+                <div>
+                    <h3 class="text-xl font-semibold">Workshop de respiración consciente</h3>
+                    <p class="text-gray-500 mt-1">Una práctica suave para regular energía, estrés y descanso.</p>
+                </div>
+                <span class="bg-custom-green px-4 py-2 rounded-full text-sm font-semibold w-fit">10:00 hs</span>
+            </article>
+            <article class="grid md:grid-cols-[160px_1fr_auto] gap-4 items-center bg-white border border-gray-100 rounded-3xl p-6">
+                <p class="text-custom-purple font-bold">Vie 17 Jul</p>
+                <div>
+                    <h3 class="text-xl font-semibold">Clase especial de Pilates + elongación</h3>
+                    <p class="text-gray-500 mt-1">Trabajo de fuerza y movilidad para cerrar la semana livianos.</p>
+                </div>
+                <span class="bg-custom-green px-4 py-2 rounded-full text-sm font-semibold w-fit">18:30 hs</span>
+            </article>
+            <article class="grid md:grid-cols-[160px_1fr_auto] gap-4 items-center bg-white border border-gray-100 rounded-3xl p-6">
+                <p class="text-custom-purple font-bold">Dom 26 Jul</p>
+                <div>
+                    <h3 class="text-xl font-semibold">Meditación y sonido</h3>
+                    <p class="text-gray-500 mt-1">Encuentro de pausa profunda con relajación guiada.</p>
+                </div>
+                <span class="bg-custom-green px-4 py-2 rounded-full text-sm font-semibold w-fit">17:00 hs</span>
+            </article>
+        </div>
+    </section>
+
+    <section id="paneles" class="max-w-7xl mx-auto px-6 md:px-8 py-16">
+        <div id="studentPanel" class="panel-hidden bg-white border border-gray-100 rounded-3xl p-6 md:p-8">
+            <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-8">
+                <div>
+                    <p class="text-custom-purple text-sm font-bold uppercase tracking-[0.2em] mb-3">Panel de alumno</p>
+                    <h2 class="text-3xl font-medium">Tus reservas</h2>
+                    <p id="studentGreeting" class="text-gray-500 mt-2"></p>
+                </div>
+                <button id="logoutStudentButton" class="border border-black px-5 py-3 rounded-full font-semibold w-fit">Salir</button>
+            </div>
+            <div id="studentBookings" class="grid md:grid-cols-3 gap-4"></div>
+        </div>
+
+        <div id="adminPanel" class="panel-hidden bg-[#151515] text-white rounded-3xl p-6 md:p-8 mt-8">
+            <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-8">
+                <div>
+                    <p class="text-white/60 text-sm font-bold uppercase tracking-[0.2em] mb-3">Panel de admin</p>
+                    <h2 class="text-3xl font-medium">Reservas y alumnos</h2>
+                    <p class="text-white/60 mt-2">Vista local de prueba. En producción esto sale de Supabase.</p>
+                </div>
+                <button id="logoutAdminButton" class="border border-white px-5 py-3 rounded-full font-semibold w-fit">Salir</button>
+            </div>
+            <div class="grid md:grid-cols-3 gap-4 mb-8">
+                <div class="border border-white/10 rounded-2xl p-5">
+                    <p class="text-white/60 text-sm">Alumnos</p>
+                    <p id="adminUserCount" class="text-3xl font-semibold mt-2">0</p>
+                </div>
+                <div class="border border-white/10 rounded-2xl p-5">
+                    <p class="text-white/60 text-sm">Reservas activas</p>
+                    <p id="adminBookingCount" class="text-3xl font-semibold mt-2">0</p>
+                </div>
+                <div class="border border-white/10 rounded-2xl p-5">
+                    <p class="text-white/60 text-sm">Clases disponibles</p>
+                    <p class="text-3xl font-semibold mt-2">3</p>
+                </div>
+            </div>
+            <div id="adminBookings" class="space-y-3"></div>
+        </div>
+    </section>
+
+    <div id="authModal" class="modal-backdrop" role="dialog" aria-modal="true" aria-labelledby="authTitle">
+        <div class="bg-white rounded-3xl p-6 md:p-8 w-full max-w-md shadow-2xl">
+            <div class="flex items-start justify-between gap-4 mb-6">
+                <div>
+                    <p class="text-custom-purple text-sm font-bold uppercase tracking-[0.2em] mb-2">Cuenta</p>
+                    <h2 id="authTitle" class="text-2xl font-semibold">Entrar a Denise</h2>
+                </div>
+                <button id="closeAuthButton" class="w-10 h-10 rounded-full border border-gray-200" aria-label="Cerrar">×</button>
+            </div>
+            <form id="authForm" class="space-y-4">
+                <label class="block">
+                    <span class="text-sm font-semibold">Nombre</span>
+                    <input id="authName" type="text" class="mt-2 w-full border border-gray-200 rounded-2xl px-4 py-3 outline-none focus:border-black" placeholder="Tu nombre">
+                </label>
+                <label class="block">
+                    <span class="text-sm font-semibold">Email</span>
+                    <input id="authEmail" type="email" required class="mt-2 w-full border border-gray-200 rounded-2xl px-4 py-3 outline-none focus:border-black" placeholder="tu@email.com">
+                </label>
+                <label class="block">
+                    <span class="text-sm font-semibold">Contraseña</span>
+                    <input id="authPassword" type="password" required class="mt-2 w-full border border-gray-200 rounded-2xl px-4 py-3 outline-none focus:border-black" placeholder="Mínimo 4 caracteres">
+                </label>
+                <p id="authHint" class="text-sm text-gray-500">Para probar admin: admin@denise.com / admin</p>
+                <p id="authError" class="text-sm text-red-600"></p>
+                <button id="authSubmitButton" type="submit" class="w-full bg-black text-white px-5 py-3 rounded-full font-semibold">Entrar</button>
+                <button id="switchAuthModeButton" type="button" class="w-full border border-black px-5 py-3 rounded-full font-semibold">Crear cuenta nueva</button>
+            </form>
+        </div>
+    </div>
+
+    <footer class="px-8 py-12 border-t border-gray-200 text-center text-gray-500 text-sm">
+        <p>&copy; 2026 Denise Studio. Tu bienestar es nuestra misión.</p>
+    </footer>
+
+    <a href="https://wa.me/5491123456789?text=Hola%20Denise%2C%20quiero%20recibir%20informaci%C3%B3n%20sobre%20clases%20de%20Yoga%20y%20Pilates."
+       target="_blank"
+       rel="noopener"
+       class="whatsapp-button bg-whatsapp-aqua"
+       aria-label="Enviar mensaje directo por WhatsApp a Denise">
+        <svg xmlns="http://www.w3.org/2000/svg" width="31" height="31" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+            <path d="M12.04 2C6.58 2 2.14 6.37 2.14 11.75c0 1.72.46 3.4 1.34 4.88L2 22l5.5-1.43a10.1 10.1 0 0 0 4.54 1.08c5.46 0 9.9-4.37 9.9-9.75S17.5 2 12.04 2Zm0 17.98c-1.45 0-2.86-.39-4.1-1.13l-.3-.18-3.26.85.87-3.12-.2-.32a8.12 8.12 0 0 1-1.25-4.33c0-4.45 3.69-8.07 8.24-8.07s8.24 3.62 8.24 8.07-3.69 8.23-8.24 8.23Zm4.52-6.14c-.25-.12-1.47-.71-1.7-.79-.23-.08-.4-.12-.56.12-.17.25-.65.79-.8.95-.15.17-.3.19-.55.06-.25-.12-1.05-.38-2-1.2-.74-.65-1.24-1.45-1.38-1.69-.15-.25-.02-.38.11-.5.11-.11.25-.29.37-.44.12-.14.17-.25.25-.42.08-.17.04-.31-.02-.44-.06-.12-.56-1.33-.77-1.83-.2-.48-.41-.41-.56-.42h-.48c-.17 0-.44.06-.67.31-.23.25-.88.85-.88 2.07 0 1.22.9 2.4 1.03 2.56.12.17 1.77 2.65 4.28 3.72.6.25 1.07.4 1.43.52.6.19 1.15.16 1.58.1.48-.07 1.47-.59 1.68-1.16.21-.58.21-1.07.15-1.17-.06-.1-.23-.16-.48-.29Z"/>
+        </svg>
+    </a>
+
+    <script>
+        const classes = {
+            "yoga-vinyasa": {
+                name: "Yoga Vinyasa",
+                schedule: "Lunes 09:00 / Viernes 08:30",
+                capacity: 8
+            },
+            "pilates-reformer": {
+                name: "Pilates Reformer",
+                schedule: "Lunes 18:30 / Miércoles 10:00 / Viernes 18:30",
+                capacity: 5
+            },
+            mindfulness: {
+                name: "Mindfulness",
+                schedule: "Miércoles 19:00",
+                capacity: 10
+            }
+        };
+
+        const storage = {
+            users: "denise_users",
+            session: "denise_session",
+            bookings: "denise_bookings"
+        };
+
+        const authModal = document.getElementById("authModal");
+        const authForm = document.getElementById("authForm");
+        const authTitle = document.getElementById("authTitle");
+        const authName = document.getElementById("authName");
+        const authEmail = document.getElementById("authEmail");
+        const authPassword = document.getElementById("authPassword");
+        const authError = document.getElementById("authError");
+        const authSubmitButton = document.getElementById("authSubmitButton");
+        const switchAuthModeButton = document.getElementById("switchAuthModeButton");
+        let authMode = "login";
+        let pendingClassId = null;
+
+        function read(key, fallback) {
+            return JSON.parse(localStorage.getItem(key) || JSON.stringify(fallback));
+        }
+
+        function write(key, value) {
+            localStorage.setItem(key, JSON.stringify(value));
+        }
+
+        function seedAdmin() {
+            const users = read(storage.users, []);
+            if (!users.some((user) => user.email === "admin@denise.com")) {
+                users.push({ name: "Admin Denise", email: "admin@denise.com", password: "admin", role: "admin" });
+                write(storage.users, users);
+            }
+        }
+
+        function getSession() {
+            return read(storage.session, null);
+        }
+
+        function setAuthMode(mode) {
+            authMode = mode;
+            const isRegister = mode === "register";
+            authTitle.textContent = isRegister ? "Crear cuenta" : "Entrar a Denise";
+            authSubmitButton.textContent = isRegister ? "Crear cuenta" : "Entrar";
+            switchAuthModeButton.textContent = isRegister ? "Ya tengo cuenta" : "Crear cuenta nueva";
+            authName.parentElement.style.display = isRegister ? "block" : "none";
+            authError.textContent = "";
+        }
+
+        function openAuth(mode = "login", classId = null) {
+            pendingClassId = classId;
+            setAuthMode(mode);
+            authModal.classList.add("is-open");
+            authEmail.focus();
+        }
+
+        function closeAuth() {
+            authModal.classList.remove("is-open");
+            pendingClassId = null;
+            authForm.reset();
+            authError.textContent = "";
+        }
+
+        function reserveClass(classId) {
+            const session = getSession();
+            if (!session) {
+                openAuth("register", classId);
+                return;
+            }
+
+            const bookings = read(storage.bookings, []);
+            const alreadyBooked = bookings.some((booking) => booking.email === session.email && booking.classId === classId);
+            if (!alreadyBooked) {
+                bookings.push({ email: session.email, classId, createdAt: new Date().toISOString() });
+                write(storage.bookings, bookings);
+            }
+            renderPanels();
+            document.getElementById("paneles").scrollIntoView({ behavior: "smooth" });
+        }
+
+        function cancelBooking(classId, email = null) {
+            const session = getSession();
+            const targetEmail = email || session?.email;
+            const bookings = read(storage.bookings, []).filter((booking) => !(booking.email === targetEmail && booking.classId === classId));
+            write(storage.bookings, bookings);
+            renderPanels();
+        }
+
+        function renderPanels() {
+            const session = getSession();
+            const users = read(storage.users, []);
+            const bookings = read(storage.bookings, []);
+            const studentPanel = document.getElementById("studentPanel");
+            const adminPanel = document.getElementById("adminPanel");
+            studentPanel.classList.add("panel-hidden");
+            adminPanel.classList.add("panel-hidden");
+
+            if (!session) return;
+
+            if (session.role === "admin") {
+                adminPanel.classList.remove("panel-hidden");
+                document.getElementById("adminUserCount").textContent = users.filter((user) => user.role !== "admin").length;
+                document.getElementById("adminBookingCount").textContent = bookings.length;
+                document.getElementById("adminBookings").innerHTML = bookings.length
+                    ? bookings.map((booking) => {
+                        const user = users.find((item) => item.email === booking.email);
+                        const classData = classes[booking.classId];
+                        return `
+                            <div class="grid md:grid-cols-[1fr_1fr_auto] gap-3 items-center border border-white/10 rounded-2xl p-4">
+                                <div>
+                                    <p class="font-semibold">${user?.name || booking.email}</p>
+                                    <p class="text-white/60 text-sm">${booking.email}</p>
+                                </div>
+                                <div>
+                                    <p>${classData.name}</p>
+                                    <p class="text-white/60 text-sm">${classData.schedule}</p>
+                                </div>
+                                <button class="admin-cancel border border-white px-4 py-2 rounded-full text-sm font-semibold" data-class-id="${booking.classId}" data-email="${booking.email}">Bajar de clase</button>
+                            </div>
+                        `;
+                    }).join("")
+                    : `<p class="text-white/60">Todavía no hay reservas.</p>`;
+                return;
+            }
+
+            studentPanel.classList.remove("panel-hidden");
+            document.getElementById("studentGreeting").textContent = `Hola ${session.name}, desde acá podés ver tus clases y bajarte si no podés asistir.`;
+            const userBookings = bookings.filter((booking) => booking.email === session.email);
+            document.getElementById("studentBookings").innerHTML = userBookings.length
+                ? userBookings.map((booking) => {
+                    const classData = classes[booking.classId];
+                    return `
+                        <article class="border border-gray-100 rounded-2xl p-5">
+                            <p class="text-xl font-semibold">${classData.name}</p>
+                            <p class="text-gray-500 mt-2">${classData.schedule}</p>
+                            <button class="student-cancel mt-5 w-full border border-black px-4 py-3 rounded-full font-semibold" data-class-id="${booking.classId}">Bajarme de la clase</button>
+                        </article>
+                    `;
+                }).join("")
+                : `<div class="md:col-span-3 bg-gray-50 rounded-2xl p-6 text-gray-500">Todavía no reservaste clases. Elegí una clase arriba y tocá reservar.</div>`;
+        }
+
+        seedAdmin();
+        setAuthMode("login");
+        renderPanels();
+
+        document.getElementById("loginButton").addEventListener("click", () => openAuth("login"));
+        document.getElementById("registerButton").addEventListener("click", () => openAuth("register"));
+        document.getElementById("closeAuthButton").addEventListener("click", closeAuth);
+        document.getElementById("logoutStudentButton").addEventListener("click", () => {
+            localStorage.removeItem(storage.session);
+            renderPanels();
+        });
+        document.getElementById("logoutAdminButton").addEventListener("click", () => {
+            localStorage.removeItem(storage.session);
+            renderPanels();
+        });
+        switchAuthModeButton.addEventListener("click", () => setAuthMode(authMode === "login" ? "register" : "login"));
+
+        document.querySelectorAll(".reserve-button").forEach((button) => {
+            button.addEventListener("click", (event) => {
+                event.preventDefault();
+                reserveClass(button.dataset.classId);
+            });
+        });
+
+        authForm.addEventListener("submit", (event) => {
+            event.preventDefault();
+            const users = read(storage.users, []);
+            const email = authEmail.value.trim().toLowerCase();
+            const password = authPassword.value.trim();
+
+            if (password.length < 4) {
+                authError.textContent = "La contraseña debe tener al menos 4 caracteres.";
+                return;
+            }
+
+            if (authMode === "register") {
+                if (!authName.value.trim()) {
+                    authError.textContent = "Ingresá tu nombre.";
+                    return;
+                }
+                if (users.some((user) => user.email === email)) {
+                    authError.textContent = "Ese email ya tiene cuenta.";
+                    return;
+                }
+                const user = { name: authName.value.trim(), email, password, role: "student" };
+                users.push(user);
+                write(storage.users, users);
+                write(storage.session, { name: user.name, email: user.email, role: user.role });
+            } else {
+                const user = users.find((item) => item.email === email && item.password === password);
+                if (!user) {
+                    authError.textContent = "Email o contraseña incorrectos.";
+                    return;
+                }
+                write(storage.session, { name: user.name, email: user.email, role: user.role });
+            }
+
+            const classToReserve = pendingClassId;
+            closeAuth();
+            if (classToReserve) reserveClass(classToReserve);
+            renderPanels();
+            document.getElementById("paneles").scrollIntoView({ behavior: "smooth" });
+        });
+
+        document.addEventListener("click", (event) => {
+            const studentCancel = event.target.closest(".student-cancel");
+            const adminCancel = event.target.closest(".admin-cancel");
+            if (studentCancel) cancelBooking(studentCancel.dataset.classId);
+            if (adminCancel) cancelBooking(adminCancel.dataset.classId, adminCancel.dataset.email);
+        });
+    </script>
+</body>
+</html>
