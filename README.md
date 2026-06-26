@@ -39,3 +39,14 @@ where email = 'EMAIL_DE_DENISE';
 ```
 
 Si Auth pide confirmar email, desactivar temporalmente "Confirm email" en Authentication > Providers > Email, o confirmar el correo antes de iniciar sesion.
+
+## URLs de Auth en Supabase
+
+En Supabase > Authentication > URL Configuration:
+
+- Site URL: `https://holistic-woad.vercel.app`
+- Redirect URLs:
+  - `https://holistic-woad.vercel.app`
+  - `https://holistic-woad.vercel.app/**`
+
+Si aparece `localhost` en los mails o redirecciones, cambiar estos campos y guardar.

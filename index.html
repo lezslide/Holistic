@@ -654,6 +654,8 @@
     <script>
         const SUPABASE_URL = "https://juvojjajjmtrifzxdeub.supabase.co";
         const SUPABASE_PUBLISHABLE_KEY = "sb_publishable_z6BebHdjeArfdeke1cXIKw_ymiMvG6m";
+        const PRODUCTION_URL = "https://holistic-woad.vercel.app";
+        const APP_URL = window.location.origin.startsWith("http") ? window.location.origin : PRODUCTION_URL;
         const db = window.supabase.createClient(SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY);
 
         const classes = {
@@ -881,7 +883,10 @@
                 const { data, error } = await db.auth.signUp({
                     email,
                     password,
-                    options: { data: { name } }
+                    options: {
+                        data: { name },
+                        emailRedirectTo: APP_URL
+                    }
                 });
 
                 if (error) {
