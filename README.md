@@ -44,9 +44,9 @@ Si Auth pide confirmar email, desactivar temporalmente "Confirm email" en Authen
 
 En Supabase > Authentication > URL Configuration:
 
-- Site URL: `https://holistic-woad.vercel.app`
+- Site URL: `https://denise-yoga.vercel.app`
 - Redirect URLs:
-  - `https://holistic-woad.vercel.app`
-  - `https://holistic-woad.vercel.app/**`
+  - `https://denise-yoga.vercel.app`
+  - `https://denise-yoga.vercel.app/**`
 
 Si aparece `localhost` en los mails o redirecciones, cambiar estos campos y guardar.
